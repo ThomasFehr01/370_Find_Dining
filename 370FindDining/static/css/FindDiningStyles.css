@@ -1,0 +1,18 @@
+{% load static %}
+html{
+    background-repeat: repeat;
+    background-size: 400px auto;
+    margin: 15px auto 15px;
+    text-align: center;
+}
+
+body {
+    background-color: rgb(176, 231, 203);
+    border-radius: 30px;
+    color:rgb(9, 82, 39);
+    box-shadow: 0 0 50px 2px;
+    margin: auto;
+    text-align: center;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}

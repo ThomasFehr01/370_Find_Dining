@@ -1,0 +1,38 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDining</title>
+    <style>
+        html{
+            background-image: url({% static 'images/backgroundFD.png' %});
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/FindDiningStyles.css' %}?{% now "U" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/CalculatingStyles.css' %}?{% now "U" %}">
+</head>
+<body>
+
+<div class="Loading"></div>
+<br>
+<h3>Finding the best match for YOU...</h3>
+</body>
+
+<script type = "text/javascript">
+
+    var loadingTimeOut = setTimeout(switchPage, 2000);
+
+    /**
+     * Switches to best result after TimeOut
+     */
+    function switchPage() {
+        clearTimeout(loadingTimeOut);
+        window.location.assign('./best_result');
+    }
+
+</script>
+</html>

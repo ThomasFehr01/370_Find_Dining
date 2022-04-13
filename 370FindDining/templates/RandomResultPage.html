@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+{%  load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDining</title>
+    <style>
+        html{
+            background-image: url({% static 'images/backgroundFD.png' %});
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/FindDiningStyles.css' %}?{% now "U" %}
+">
+    <link rel="stylesheet" href="{% static 'css/ResultStyles.css' %}?{% now "U" %}
+">
+</head>
+<body>
+
+<!--RESULT IMAGE-->
+{% if image != None %}
+<img src="{{ image }}" width="180" height="150" id="ResultImage" alt="Restaurant Image"><br>
+{% endif %}
+
+<table class="TitleText">
+    <!--RESTAURANT NAME TEXT-->
+    <td><h2 id="ResultName">{{ name }}</h2></td>
+
+    <!--Star Rating-->
+    {% if stars != None %}
+        <td id="ResultStars" class.="AllStars">
+        <img src="{%  static 'images/star.png' %}" class="Stars" id="Star1">
+        <img src="{%  static 'images/star.png' %}" class="Stars" id="Star2">
+        <img src="{%  static 'images/star.png' %}" class="Stars" id="Star3">
+        <img src="{%  static 'images/star.png' %}" class="Stars" id="Star4">
+        <img src="{%  static 'images/star.png' %}" class="Stars" id="Star5">
+        <img src="{%  static 'images/halfStar.png' %}" class="Stars" id="Star6">
+        </td>
+    {%  endif %}
+
+    <!--Dividing Line-->
+    <hr class="rounded">
+</table>
+
+<div class="ContentText">
+    <!-- Price -->
+    {% if price != None %}
+        <p id="ResultPrice"></p>
+    {% endif %}
+
+    <!--Phone Number-->
+    {% if phoneNumber != None %}
+        <p id="ResultPhone"><b>Phone Number:</b> {{ phoneNumber }}</p>
+    {%  endif %}
+
+    <!--Location-->
+    <p id="ResultLocation"><b>Location:</b> {{ distance }} km away</p>
+
+    <!-- Address -->
+    {% if address != None %}
+        <p id="ResultAddress"><b>Address:</b> {{ address }}</p>
+    {%  endif %}
+
+    <!-- Delivery -->
+    {% if deliveryLink != None %}
+        <p class="ContentButtons" id="ResultDelivery"><button><a href="{{ deliveryLink }}">Delivery</a></button></p>
+    {%  endif %}
+
+    <!-- Website -->
+    {% if websiteLink != "None" %}
+        <p class="ContentButtons" id="ResultWebsite"><button><a target="_blank" href="{{ websiteLink }}">Website</a></button></p>
+    {%  endif %}
+
+    <!-- More Info -->
+    {% if moreInfo != None %}
+        <p class="ContentButtons" id="ResultMoreInfo"><button><a target="_blank" href="{{ moreInfo }}">More Info</a></button></p>
+    {%  endif %}
+
+</div>
+
+<br>
+<!--- DIRECTION BUTTONS --->
+<table class="DirectionButtons">
+    <td id="GoBack">
+        <button id="GoBackButton" onclick="tryAgain()">Go Back</button><br>
+    </td>
+    <td id="TryAgain">
+        <button id="TryAgainButton" onclick="window.location.reload();">Try Again</button><br>
+    </td>
+</table>
+
+<!-- Scripting Section -->
+<script src="{% static 'ResultFunctions.js' %}"></script>
+<script type="text/javascript">
+    var stars = document.getElementsByClassName("Stars");
+
+    /**
+     * Takes User back to home page
+     */
+    function tryAgain() {
+    var http = new XMLHttpRequest();
+    var url = '/reset';
+
+    http.open('POST', url, true);
+
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+    http.onreadystatechange = function () {
+        if (http.readyState === 4 && http.status === 200) {
+            window.location.assign('./')
+        }
+    };
+    http.send(null);
+}
+
+
+    /**
+     * Testing function for the Star Ratings
+     * @param numStars: number of stars received
+     * @param expected: number expected
+     */
+    function testStarCount(numStars, expected) {
+        results.total++;
+        var result = starCount(numStars);
+        if (result !== expected) {
+            results.bad++;
+            alert("Expected " + expected + ", but was " + result);
+        }
+    }
+
+
+    /**
+     * Testing function for the Price
+     * @param price: the price received
+     * @param expected: number expected
+     */
+    function testPrice(price, expected) {
+        results.total++;
+        var result = dollarSignMaker(price);
+        if (result !== expected) {
+            results.bad++;
+            alert("Expected " + expected + ", but was " + result);
+        }
+    }
+
+
+    var results = {
+        total: 0,
+        bad: 0
+    };
+
+
+    // uncomment for testing
+    {#testStarCount(-1, 0);#}
+    {#testStarCount(0, 0);#}
+    {#testStarCount(3, 3);#}
+    {#testStarCount(3.5, 3.5);#}
+    {#testStarCount(4.3, 4);#}
+    {#testStarCount(5, 5);#}
+    {#testStarCount(6, 0);#}
+    {##}
+    {#testPrice(-3, "");#}
+    {#testPrice(0, "");#}
+    {#testPrice(1, "$");#}
+    {#testPrice(3, "$$$");#}
+    {#testPrice(4, "$$$$");#}
+    {#testPrice(6, "");#}
+    {##}
+    {#alert("Of " + results.total + " tests, " + results.bad + " failed, " + (results.total - results.bad) + " passed.");#}
+
+
+    starCount({{ stars }});
+    document.getElementById("ResultPrice").innerHTML = dollarSignMaker({{ price }});
+</script>
+
+</body>
+</html>

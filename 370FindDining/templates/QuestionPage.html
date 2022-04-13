@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+{%  load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDining</title>
+    <style>
+        html{
+            background-image: url({% static 'images/backgroundFD.png' %});
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/QuestionStyles.css' %}?{% now "U" %}
+">
+     <link rel="stylesheet" href="{% static 'css/FindDiningStyles.css' %}?{% now "U" %}
+">
+</head>
+<body>
+
+    <!-- MASCOT -->
+    <img src="../static/images/Mascot.png" width="180" height="150">
+
+    <!-- QUESTION -->
+    <h1 id="QuestionText">{{ question }}</h1>
+
+    <!-- BUTTONS -->
+    <div class="QuestionButtons">
+        <button type="button" id="option1" onclick="recordAnswer(this.textContent)"><a>{{ option1 }}</a></button><br>
+        <p id="OrText">OR</p>
+        <button type="button" id="option2" onclick="recordAnswer(this.textContent)"><a>{{ option2 }}</a></button>
+    </div>
+
+    <!-- NUMBER OF RESTAURANTS NEARBY -->
+    <p id="numRest">Number of Restaurants:</p>
+
+    <!-- Scripting Section -->
+    <script type = "text/javascript">
+        var id = "{{ id }}";
+        var numRestaurants = 0;
+        var numQuestions = {{ num_questions }};
+        getRestaurants()
+
+
+        /**
+         * Gets the number of restaurants
+         */
+        function getRestaurants(){
+            var http = new XMLHttpRequest();
+            var url = '/current_restaurants';
+
+            http.open('GET', url, false);
+
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.onreadystatechange = function() {
+                if(http.readyState === 4 && http.status === 200) {
+                    document.getElementById("numRest").textContent = "Number of Restaurants: " + http.responseText;
+                    numRestaurants = http.responseText;
+                }
+            };
+            http.send()
+        }
+
+
+        /**
+         * Build the json with question, id, and answer
+         * @param optionText: The text in the button that the user clicked
+         */
+        function recordAnswer(optionText) {
+            var json = {};
+
+            json['question'] = document.getElementById("QuestionText").innerText
+            json['answer'] = optionText;
+            json['id'] = id;
+
+            sendRequest(json);
+            next();
+        }
+
+
+        /**
+         * Decide if we are asking more questions or showing results
+         */
+        function next() {
+            getRestaurants();
+            if ((numRestaurants <= 5) || (numQuestions === 6)) {
+                window.location.assign("./calculate");
+            }
+            else {
+                window.location.reload()
+            }
+        }
+
+
+        /**
+         * Sends the answers to the backend
+         */
+        function sendRequest(json){
+            var http = new XMLHttpRequest();
+            var url = '/post_answer';
+
+            http.open('POST', url, false);
+
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.send("data="+JSON.stringify(json));
+        }
+
+    </script>
+</body>
+</html>

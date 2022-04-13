@@ -1,0 +1,156 @@
+body, html {
+    border-radius: 30px;
+    display: inline-block;
+}
+
+/* Result Image Sizing, width automatically 400px */
+#ResultImage{
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    height: auto;
+    width: 400px;
+}
+
+button{
+    padding: 10%;
+    background-color:rgb(29, 156, 82);
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 30px;
+    font-weight: bold;
+    color:rgb(255, 255, 255);
+    padding: 0px 0px;
+    font-size: 150%;
+}
+
+button:active {
+    animation: press 0.2s 1 linear;
+}
+
+@keyframes press {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@keyframes bounce {
+    50% {
+        transform: rotate(5deg) translate(20px, -50px);
+    }
+    to {
+        transform: scale(0.9) rotate(10deg) translate(50px, -80px);
+        opacity: 0;
+    }
+}
+
+button:hover{
+    background-color:rgb(30, 180, 92);
+}
+button a{
+    text-decoration: none;
+    color:rgb(255, 255, 255);
+    display: block;
+    padding: 15px 30px;
+}
+
+/* Table for the Name & Stars */
+.TitleText{
+    color: black;
+    width: 400px;
+    table-layout: fixed;
+}
+
+.TitleText, td{
+    margin-left: auto;
+    margin-right: auto;
+    vertical-align: text-top;
+}
+h2{
+    font-size: 200%;
+}
+#ResultName{
+    text-align: left;
+}
+
+/* Rating Stars */
+#ResultStars{
+    text-align: right;
+}
+.Stars{
+    height: 30px;
+    left: 100%;
+    display: none;
+}
+
+/* Rounded divider */
+hr.rounded {
+    border: 3px solid rgb(29, 156, 82);
+    background-color: rgb(29, 156, 82);
+    border-radius: 5px;
+}
+
+/* Table for the Context Info on Restaurant (Location, Number, etc) */
+.ContentText{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    color: rgb(4, 35, 11);
+}
+
+.ContentButtons{
+    display: inline;
+}
+.ContentButtons a{
+    text-decoration: none;
+    color: rgb(29, 156, 82);
+    display: block;
+    padding: 10px;
+}
+.ContentButtons button{
+    background-color: transparent;
+    border: 2px solid rgb(29, 156, 82);
+    border-radius: 20px;
+    font-size: 15px;
+    padding: 0px;
+}
+.ContentButtons button:hover{
+    background-color: rgb(29, 156, 82);
+}
+.ContentButtons a:hover{
+    color: white;
+}
+#ResultPrice{
+    color: rgb(29, 156, 82);
+    font-weight: bold;
+}
+
+/**
+Button table
+ */
+#TryAgainButton{
+    padding: 15px 30px;
+}
+
+#GoBackButton{
+    padding: 15px 30px;
+    text-align: left;
+}
+
+.DirectionButtons td{
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#TryAgain{
+    text-align: right;
+}
+
+#GoBack{
+    text-align: left;
+}

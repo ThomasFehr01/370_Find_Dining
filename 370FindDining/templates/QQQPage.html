@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+{%  load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDining</title>
+    <style>
+        html{
+            background-image: url({% static 'images/backgroundFD.png' %});
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/QuestionStyles.css' %}?{% now "U" %}
+">
+    <link rel="stylesheet" href="{% static 'css/FindDiningStyles.css' %}?{% now "U" %}
+">
+</head>
+<body>
+
+    <!-- MASCOT -->
+    <img src="../static/images/Mascot.png" width="180" height="150">
+
+    <!-- QUESTION -->
+    <h1 id="QuestionText">Would you like delivery or dine-in?</h1>
+
+    <!-- BUTTONS -->
+    <div class="QuestionButtons">
+        <button type="button" id="option1QQQ" onclick="nextQQQ(this.textContent)">Delivery</button><br>
+        <p id="OrText">OR</p>
+        <button type="button" id="option2QQQ" onclick="nextQQQ(this.textContent)">Dine-in</button>
+    </div>
+
+    <!-- NUM RESTAURANTS -->
+    <p id="numRest">Number of Restaurants:</p>
+
+    <!-- Scripting Section -->
+    <script src="{% static 'QQQFunctions.js' %}"></script>
+    <script type = "text/javascript">
+        /**
+         * Fills in information for the next Static QQQ Question, while saving current user answer
+         * @param optionText - the user's current answer to the question
+         */
+        function nextQQQ(optionText){
+
+            var json = {};
+
+            // Adding to JSON
+            json['question'] = document.getElementById("QuestionText").innerText
+            json['answer'] = optionText;
+
+            // set id
+            if (currentQuestion === 1) {
+                json['id'] = 'qqq_takeout';
+            }
+            else if (currentQuestion === 2) {
+                json['id'] = 'qqq_price';
+            }
+            else if (currentQuestion === 3) {
+                json['id'] = 'qqq_distance';
+            }
+
+            sendRequest(json);
+        }
+
+
+        /**
+         * Sends the QQQ static answers to the backend
+         * @param json: json of the question, question id, and answer
+         */
+        function sendRequest(json){
+            var http = new XMLHttpRequest();
+            var url = '/post_answer';
+
+            http.open('POST', url, false);
+
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.send("data="+JSON.stringify(json));
+
+            decision();
+        }
+
+
+        /**
+         * Decide whether the next question is displayed or if we give the question again
+         */
+        function decision() {
+            getRestaurants();
+
+            setTimeout(function () {
+                // When there are no restaurants
+            if (document.getElementById("numRest").textContent === "Number of Restaurants: 0") {
+                undoSend();
+                currentQuestion = currentQuestion - 1;
+                alert("Seems like there's no restaurants in your area that match that request... Try the other option!");
+                document.getElementById("QuestionText").innerHTML = questions[currentQuestion];
+                document.getElementById("option1QQQ").innerHTML = option1[currentQuestion];
+                document.getElementById("option2QQQ").innerHTML = option2[currentQuestion];
+                currentQuestion++;
+            }
+            else {
+                // Changing to next question
+                if (currentQuestion < 3) {
+                    document.getElementById("QuestionText").innerHTML = questions[currentQuestion];
+                    document.getElementById("option1QQQ").innerHTML = option1[currentQuestion];
+                    document.getElementById("option2QQQ").innerHTML = option2[currentQuestion];
+                    currentQuestion++;
+                }
+                else {
+                                    if (numRestaurants <= 5) {
+                    window.location.assign("./best_result")
+                }
+                else {
+                    window.location.assign("./d_question");
+                }
+                }
+            }}, 100);
+        }
+
+        /**
+         * Call the backend undo function
+         */
+        function undoSend() {
+            var http = new XMLHttpRequest();
+            var url = '/undo_last';
+            http.open('POST', url, true);
+
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.onreadystatechange = function()
+            {
+                if(http.readyState === 4 && http.status === 200)
+                {
+                    console.log("ok");
+                    getRestaurants();
+                }
+            };
+
+            http.send();
+        }
+
+
+        /**
+         * Gets the number of restaurants
+         */
+        function getRestaurants(){
+            var http = new XMLHttpRequest();
+            var url = '/current_restaurants';
+
+            http.open('GET', url, true);
+
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+            http.onreadystatechange = function() {
+                if(http.readyState === 4 && http.status === 200) {
+		    if (parseInt(http.responseText) <= 5 && parseInt(http.responseText) >= 1) {
+                        window.location.assign('./best_result')
+                    }
+                    document.getElementById("numRest").textContent = "Number of Restaurants: " + http.responseText;
+                    numRestaurants = parseInt(http.responseText)
+                    return http.responseText;
+                }
+            };
+            http.send();
+        }
+
+        getRestaurants();
+
+        var questions = ["Would you like delivery or dine-in?", "Would you like cheap or expensive?", "Would you like somewhere close or far?"];
+        var option1 = ["Delivery", "Cheap", "Close"];
+        var option2 = ["Dine-in", "Expensive", "Far"];
+        var currentQuestion = 1;
+
+    </script>
+</body>
+</html>

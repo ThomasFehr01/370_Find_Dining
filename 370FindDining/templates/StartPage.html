@@ -1,0 +1,172 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindDining</title>
+
+    <style>
+        html{
+            background-image: url({% static 'images/backgroundFD.png' %});
+        }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/StartStyles.css' %}?{% now "U" %}
+">
+     <link rel="stylesheet" href="{% static 'css/FindDiningStyles.css' %}?{% now "U" %}
+">
+</head>
+<body>
+
+<!--MAIN DISPLAY-->
+<div class="MainDisplay" id="MainDisplay">
+    <!-- Name Text -->
+    <h1 id="FindDiningText">Find Dining</h1>
+
+    <!--Mascot Image-->
+    <img src="{%  static 'images/mascot.png' %}" id="MascotImage" width="180" height="150">
+
+    <!--Buttons-->
+    <div class="Buttons">
+        <form>
+            <button id="SurveyButton"><a href="./question">Survey</a></button><br><br>
+            <button id="RandomButton"><a href="./random_result">Choose for me!</a></button>
+        </form>
+    </div>
+
+    <!--Number Restaurants nearby-->
+    <h3 id="numRest">Number of Restaurants:</h3>
+</div>
+
+
+<!--LOADING DISPLAY-->
+<div class="LoadingDisplay" id="LoadingDisplay">
+    <!--Name Text-->
+    <h1 id="FindDiningText">Find Dining</h1>
+
+    <!--Mascot Image-->
+    <img src="../static/images/spyingMascot.png" width="230" height=auto>
+
+    <button id="StartingButton" onclick="startRequest()"><a>Get Started!</a></button>
+
+    <!--Loading Elements-->
+    <div id="LoadingContext">
+    <h3>Getting ready...</h3>
+    <div class="Loading"></div>
+    </div>
+    <br>
+    <br>
+</div>
+
+
+<!--LOCATION ERROR DISPLAY-->
+<div class="LocationErrorDisplay" id="LocationErrorDisplay">
+    <!--Name Text-->
+    <h1 id="FindDiningText">Find Dining</h1>
+
+    <!--Mascot Image-->
+    <img src="../static/images/ErrorMascot.png" width="270" height=auto>
+
+    <!--Message-->
+    <h3>Uh oh...</h3>
+    <h3 id="ErrorText">We can't seem to get your location</h3>
+</div>
+</body>
+
+
+<!-- Scripting Section -->
+<script src="{% static 'StartFunctions.js' %}"></script>
+<script type = "text/javascript">
+
+    var json = {};
+
+
+    /**
+     * Skips loading screen if the user chooses to go back to start page
+     */
+    function setHomeScreen(){
+        if(document.cookie.indexOf('userID=') !== -1){
+            getRestaurants();
+            document.getElementById("MainDisplay").style.display = "inline";
+            document.getElementById("LoadingDisplay").style.display = "none";
+            document.getElementById("LocationErrorDisplay").style.display = "none";
+        }
+    }
+    setHomeScreen();
+
+    /**
+     * Gets the number of restaurants
+     */
+    function getRestaurants(){
+        tryAgain();
+        var http = new XMLHttpRequest();
+        var url = '/current_restaurants';
+
+        http.open('GET', url, false);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        http.onreadystatechange = function() {
+            if(http.readyState === 4 && http.status === 200) {
+                document.getElementById("numRest").textContent = "Number of Restaurants: " + http.responseText;
+            }
+        };
+        http.send();
+    }
+
+
+    function tryAgain() {
+        var http = new XMLHttpRequest();
+        var url = '/reset';
+
+        http.open('POST', url, false);
+
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+
+        http.onreadystatechange = function () {
+            if (http.readyState === 4 && http.status === 200) {
+            }
+        };
+        http.send(null);
+    }
+
+    windowListener();
+
+    var userLatitude;
+    var userLongitude;
+
+    getLocation();
+
+    /**
+     * Starts the loading screen
+     */
+    function startRequest(){
+        document.getElementById("LoadingContext").style.display = "inline";
+        document.getElementById("StartingButton").style.display = "none";
+        setTimeout(getRequest, 100);
+    }
+
+    /**
+     * Gets the API request
+     */
+    function getRequest(){
+        var http = new XMLHttpRequest();
+        var url = '/start_api';
+
+        http.open('GET', url, false);
+        http.send(null);
+
+        if(http.readyState === 4){
+            document.getElementById("MainDisplay").style.display = "inline";
+            document.getElementById("LoadingDisplay").style.display = "none";
+            document.getElementById("LocationErrorDisplay").style.display = "none";
+            getRestaurants()
+        }
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+html, body{
+    width: 500px;
+    height: fit-content;
+}
+
+.MainDisplay{
+    display: none;
+}
+
+.LocationErrorDisplay{
+    display: none;
+}
+
+.LoadingDisplay{
+    display: inline;
+}
+
+#LoadingContext{
+    display: none;
+}
+
+h1{
+    font-weight: 800;
+    font-size: 400%;
+    margin: 0;
+    color: black;
+}
+
+img{
+    height: auto;
+    width: 350px;
+}
+
+button{
+    padding: 10%;
+    background-color:rgb(29, 156, 82);
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 30px;
+    font-weight: bold;
+    color:rgb(255, 255, 255);
+    padding: 0px 0px;
+    font-size: 150%;
+}
+
+button:active {
+    animation: press 0.2s 1 linear;
+}
+
+@keyframes press {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@keyframes bounce {
+    50% {
+        transform: rotate(5deg) translate(20px, -50px);
+    }
+    to {
+        transform: scale(0.9) rotate(10deg) translate(50px, -80px);
+        opacity: 0;
+    }
+}
+
+button:hover{
+    background-color:rgb(30, 180, 92);
+}
+
+button a{
+    text-decoration: none;
+    color:rgb(255, 255, 255);
+    display: block;
+    padding: 15px 30px;
+}
+
+.LoadingDisplay img, .LocationErrorDisplay img{
+    width: 450px;
+    height: auto;
+}
+
+.Loading{
+    border: 8px solid rgb(176, 231, 203);
+    border-radius: 50%;
+    border-top: 8px solid rgb(29, 156, 82);
+    border-bottom: 8px solid rgba(218, 160, 109, 0.84);
+    animation: clockwiseLoad 2s backwards infinite;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto auto;
+}
+
+@keyframes clockwiseLoad {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

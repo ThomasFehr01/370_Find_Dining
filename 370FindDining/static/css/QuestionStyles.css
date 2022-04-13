@@ -1,0 +1,71 @@
+html, body{
+    width: 500px;
+    height: auto;
+}
+
+h1{
+    margin-bottom: 2%;
+    color: black;
+}
+
+button{
+    padding: 10%;
+    background-color:rgb(29, 156, 82);
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 30px;
+    font-weight: bold;
+    color:rgb(255, 255, 255);
+    padding: 0px 0px;
+    font-size: 150%;
+    cursor: pointer;
+}
+
+button:active {
+    animation: press 0.2s 1 linear;
+}
+
+@keyframes press {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.92);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+@keyframes bounce {
+    50% {
+        transform: rotate(5deg) translate(20px, -50px);
+    }
+    to {
+        transform: scale(0.9) rotate(10deg) translate(50px, -80px);
+        opacity: 0;
+    }
+}
+
+button:hover{
+    background-color:rgb(30, 180, 92);
+}
+
+button a{
+    text-decoration: none;
+    color:rgb(255, 255, 255);
+    display: block;
+    padding: 30px 40px;
+}
+
+#option1QQQ, #option2QQQ{
+    padding: 30px 40px;
+}
+
+#RestaurantNum{
+    margin-top: 2%;
+    font-style: italic;
+}
+
+#OrText{
+    font-weight: 800;
+    color: black;
+}
